@@ -1,80 +1,94 @@
 package org.example;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class WalletTest {
+
+    private Wallet wallet;
+
+    @BeforeEach
+    void initMethod() {
+        wallet = new Wallet("Joko", 10000, new ArrayList<>());
+        System.out.println("@BeforeEach dijalankan");
+    }
+
+    @AfterEach
+    void cleanMethod() {
+        wallet = null;
+        System.out.println("@AfterEach dijalankan");
+    }
 
     @Test
     void testWithdraw() {
-        Wallet wallet = new Wallet("Joko", 123, new ArrayList<>());
-        wallet.withdraw(10);
-        assertEquals(113, wallet.getBalance());
+        wallet.withdraw(1800);
+        assertEquals(8200, wallet.getBalance());
+        System.out.println("Menjalankan test method withdraw");
     }
 
     @Test
     void testWithdrawInsufficientCash() {
-        final double UANG_AWAL = 123;
-        Wallet wallet = new Wallet("Joko", UANG_AWAL, new ArrayList<>());
         assertThrows(Error.class, () -> {
             wallet.withdraw(99999);
         });
-        assertEquals(UANG_AWAL, wallet.getBalance());
+        assertEquals(10000, wallet.getBalance());
+        System.out.println("Menjalankan test method withdraw insufficent cash");
     }
 
     @Test
     void testDeposit() {
-        Wallet wallet = new Wallet("Joko", 10000, new ArrayList<>());
         wallet.deposit(4000);
         assertEquals(14000, wallet.getBalance());
+        System.out.println("Menjalankan test method deposit");
     }
 
     @Test
     void testDepositNegativeAmount() {
-        Wallet wallet = new Wallet("Joko", 10000, new ArrayList<>());
         assertThrows(Error.class, () -> {
             wallet.deposit(-4000);
         });
         assertEquals(10000, wallet.getBalance());
+        System.out.println("Menjalankan test method deposit negative amount");
     }
 
     @Test
     void testAddCard() {
-        Wallet wallet = new Wallet("Joko", 10000, new ArrayList<>());
         wallet.addCard("1234");
         assertEquals(1, wallet.getListKartu().size());
         assertTrue(wallet.getListKartu().contains("1234"));
+        System.out.println("Menjalankan test method add card");
     }
 
     @Test
     void testRemoveCard() {
-        Wallet wallet = new Wallet("Joko", 10000, new ArrayList<>());
         wallet.addCard("1234");
         wallet.removeCard("1234");
         assertEquals(0, wallet.getListKartu().size());
         assertFalse(wallet.getListKartu().contains("1234"));
+        System.out.println("Menjalankan test method remove card");
     }
 
     @Test
     void testSetOwner() {
-        Wallet wallet = new Wallet("Joko", 10000, new ArrayList<>());
         wallet.setOwner("Budi");
         assertEquals("Budi", wallet.getOwner());
+        System.out.println("Menjalankan test method set owner");
     }
 
     @Test
     void testGetOwner() {
-        Wallet wallet = new Wallet("Joko", 10000, new ArrayList<>());
         assertEquals("Joko", wallet.getOwner());
+        System.out.println("Menjalankan test method get owner");
     }
 
     @Test
     void testGetBalance() {
-        Wallet wallet = new Wallet("Joko", 10000, new ArrayList<>());
         assertEquals(10000, wallet.getBalance());
+        System.out.println("Menjalankan test method get balance");
     }
 
     @Test
@@ -84,5 +98,6 @@ class WalletTest {
         listKartu.add("5678");
         Wallet wallet = new Wallet("Joko", 10000, listKartu);
         assertEquals(listKartu, wallet.getListKartu());
+        System.out.println("Menjalankan test method get list kartu");
     }
 }
